@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#007639">
+
+  <meta
+    name="description"
+    content="Ruleta familiar para elegir el almuerzo y la once de cada día."
+  >
+
+  <title>¿Qué comemos?</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+
+<body>
+
+  <header class="encabezado">
+    <p class="subtitulo">MENÚ FAMILIAR</p>
+    <h1>¿Qué comemos?</h1>
+    <p>La ruleta decide por nosotros 😄</p>
+  </header>
+
+  <main class="contenedor">
+
+    <section class="panel-controles">
+
+      <div class="selector-tipo" role="group" aria-label="Tipo de comida">
+        <button
+          id="btn-almuerzo"
+          class="tipo-btn activo"
+          data-tipo="almuerzo"
+        >
+          🍲 Almuerzo
+        </button>
+
+        <button
+          id="btn-once"
+          class="tipo-btn"
+          data-tipo="once"
+        >
+          🥪 Once
+        </button>
+      </div>
+
+      <div class="selector-dia">
+        <label for="dia">¿Para qué día?</label>
+
+        <select id="dia">
+          <option value="hoy">Hoy</option>
+          <option value="manana">Mañana</option>
+          <option value="lunes">Lunes</option>
+          <option value="martes">Martes</option>
+          <option value="miercoles">Miércoles</option>
+          <option value="jueves">Jueves</option>
+          <option value="viernes">Viernes</option>
+          <option value="sabado">Sábado</option>
+          <option value="domingo">Domingo</option>
+        </select>
+      </div>
+
+    </section>
+
+    <section class="zona-ruleta">
+
+      <div class="puntero"></div>
+
+      <div class="ruleta-marco">
+        <canvas
+          id="ruleta"
+          width="700"
+          height="700"
+          aria-label="Ruleta de comidas"
+        ></canvas>
+      </div>
+
+      <button id="btn-girar" class="btn-girar">
+        🎡 GIRAR RULETA
+      </button>
+
+      <p id="mensaje-ayuda" class="mensaje-ayuda">
+        Selecciona almuerzo u once y gira la ruleta.
+      </p>
+
+    </section>
+
+    <section id="resultado" class="resultado oculto">
+      <p id="resultado-dia" class="resultado-dia"></p>
+      <div id="resultado-icono" class="resultado-icono">🍽️</div>
+      <h2 id="resultado-comida"></h2>
+
+      <div class="acciones-resultado">
+        <button id="btn-aceptar" class="btn-aceptar">
+          ✅ Guardar menú
+        </button>
+
+        <button id="btn-repetir" class="btn-repetir">
+          🔄 Girar otra vez
+        </button>
+      </div>
+    </section>
+
+    <section class="semana">
+      <div class="titulo-seccion">
+        <div>
+          <p class="etiqueta">PLANIFICACIÓN</p>
+          <h2>Menú semanal</h2>
+        </div>
+
+        <button id="btn-limpiar-semana" class="btn-secundario">
+          Limpiar
+        </button>
+      </div>
+
+      <div id="lista-semana" class="lista-semana"></div>
+    </section>
+
+    <section class="administrar">
+      <details>
+        <summary>⚙️ Administrar comidas</summary>
+
+        <div class="administrar-contenido">
+
+          <label for="nuevo-tipo">Categoría</label>
+
+          <select id="nuevo-tipo">
+            <option value="almuerzo">Almuerzo</option>
+            <option value="once">Once</option>
+          </select>
+
+          <label for="nueva-comida">Nueva comida</label>
+
+          <div class="agregar-fila">
+            <input
+              id="nueva-comida"
+              type="text"
+              maxlength="60"
+              placeholder="Ejemplo: Cazuela de vacuno"
+            >
+
+            <button id="btn-agregar">Agregar</button>
+          </div>
+
+          <div id="lista-comidas" class="lista-comidas"></div>
+
+          <button id="btn-restaurar" class="btn-restaurar">
+            Restaurar comidas originales
+          </button>
+
+        </div>
+      </details>
+    </section>
+
+  </main>
+
+  <footer>
+    Hecho para terminar con el eterno “¿qué hacemos para comer?” 😂
+  </footer>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
