@@ -5,7 +5,7 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"
   >
 
   <meta name="theme-color" content="#007639">
@@ -34,13 +34,16 @@
 
   <main class="contenedor">
 
+    <!-- SELECTORES -->
     <section class="panel-controles">
 
       <div class="selector-tipo" role="group" aria-label="Tipo de comida">
+
         <button
           id="btn-almuerzo"
           class="tipo-btn activo"
           data-tipo="almuerzo"
+          type="button"
         >
           🍲 Almuerzo
         </button>
@@ -49,12 +52,15 @@
           id="btn-once"
           class="tipo-btn"
           data-tipo="once"
+          type="button"
         >
           🥪 Once
         </button>
+
       </div>
 
       <div class="selector-dia">
+
         <label for="dia">¿Para qué día?</label>
 
         <select id="dia">
@@ -68,66 +74,151 @@
           <option value="sabado">Sábado</option>
           <option value="domingo">Domingo</option>
         </select>
+
       </div>
 
     </section>
 
+    <!-- RULETA -->
     <section class="zona-ruleta">
 
-      <div class="puntero"></div>
+      <div class="instruccion-ruleta">
+        <span class="icono-dedo">☝️</span>
 
-      <div class="ruleta-marco">
-        <canvas
-          id="ruleta"
-          width="700"
-          height="700"
-          aria-label="Ruleta de comidas"
-        ></canvas>
+        <div>
+          <strong>Arrastra la ruleta</strong>
+          <small>Muévela con el dedo y suéltala para hacerla girar</small>
+        </div>
       </div>
 
-      <button id="btn-girar" class="btn-girar">
-        🎡 GIRAR RULETA
-      </button>
+      <div class="contenedor-ruleta">
+
+        <div class="puntero" aria-hidden="true"></div>
+
+        <div
+          id="ruleta-interactiva"
+          class="ruleta-marco"
+          role="button"
+          tabindex="0"
+          aria-label="Arrastra la ruleta para elegir una comida"
+        >
+
+          <canvas
+            id="ruleta"
+            width="700"
+            height="700"
+            aria-label="Ruleta de comidas"
+          ></canvas>
+
+          <div class="centro-ruleta" aria-hidden="true">
+            <span id="centro-ruleta-icono">🍲</span>
+          </div>
+
+        </div>
+
+      </div>
 
       <p id="mensaje-ayuda" class="mensaje-ayuda">
-        Selecciona almuerzo u once y gira la ruleta.
+        Arrastra la ruleta con fuerza y suéltala.
       </p>
+
+      <button
+        id="btn-girar"
+        class="btn-girar btn-girar-respaldo"
+        type="button"
+      >
+        🎡 O toca aquí para girar
+      </button>
 
     </section>
 
-    <section id="resultado" class="resultado oculto">
+    <!-- RESULTADO -->
+    <section
+      id="resultado"
+      class="resultado oculto"
+      aria-live="polite"
+    >
+
       <p id="resultado-dia" class="resultado-dia"></p>
-      <div id="resultado-icono" class="resultado-icono">🍽️</div>
-      <h2 id="resultado-comida"></h2>
+
+      <div id="resultado-revelacion" class="resultado-revelacion">
+
+        <p class="texto-suspenso">HOY TOCA...</p>
+
+        <div id="contenedor-foto" class="contenedor-foto">
+
+          <img
+            id="resultado-foto"
+            class="resultado-foto"
+            src=""
+            alt=""
+            loading="lazy"
+          >
+
+          <div
+            id="foto-no-disponible"
+            class="foto-no-disponible oculto"
+          >
+            <span id="resultado-icono" class="resultado-icono">🍽️</span>
+          </div>
+
+        </div>
+
+        <h2 id="resultado-comida"></h2>
+
+      </div>
 
       <div class="acciones-resultado">
-        <button id="btn-aceptar" class="btn-aceptar">
+
+        <button
+          id="btn-aceptar"
+          class="btn-aceptar"
+          type="button"
+        >
           ✅ Guardar menú
         </button>
 
-        <button id="btn-repetir" class="btn-repetir">
+        <button
+          id="btn-repetir"
+          class="btn-repetir"
+          type="button"
+        >
           🔄 Girar otra vez
         </button>
+
       </div>
+
     </section>
 
+    <!-- MENÚ SEMANAL -->
     <section class="semana">
+
       <div class="titulo-seccion">
+
         <div>
           <p class="etiqueta">PLANIFICACIÓN</p>
           <h2>Menú semanal</h2>
         </div>
 
-        <button id="btn-limpiar-semana" class="btn-secundario">
+        <button
+          id="btn-limpiar-semana"
+          class="btn-secundario"
+          type="button"
+        >
           Limpiar
         </button>
+
       </div>
 
       <div id="lista-semana" class="lista-semana"></div>
+
     </section>
 
+    <!-- ADMINISTRAR COMIDAS -->
     <section class="administrar">
+
       <details>
+
         <summary>⚙️ Administrar comidas</summary>
 
         <div class="administrar-contenido">
@@ -142,24 +233,38 @@
           <label for="nueva-comida">Nueva comida</label>
 
           <div class="agregar-fila">
+
             <input
               id="nueva-comida"
               type="text"
               maxlength="60"
+              autocomplete="off"
               placeholder="Ejemplo: Cazuela de vacuno"
             >
 
-            <button id="btn-agregar">Agregar</button>
+            <button
+              id="btn-agregar"
+              type="button"
+            >
+              Agregar
+            </button>
+
           </div>
 
           <div id="lista-comidas" class="lista-comidas"></div>
 
-          <button id="btn-restaurar" class="btn-restaurar">
+          <button
+            id="btn-restaurar"
+            class="btn-restaurar"
+            type="button"
+          >
             Restaurar comidas originales
           </button>
 
         </div>
+
       </details>
+
     </section>
 
   </main>
@@ -167,6 +272,39 @@
   <footer>
     Hecho para terminar con el eterno “¿qué hacemos para comer?” 😂
   </footer>
+
+  <!-- SONIDOS -->
+
+  <audio
+    id="audio-ruleta"
+    preload="auto"
+    loop
+  >
+    <source
+      src="sonidos/ruleta.mp3"
+      type="audio/mpeg"
+    >
+  </audio>
+
+  <audio
+    id="audio-resultado"
+    preload="auto"
+  >
+    <source
+      src="sonidos/resultado.mp3"
+      type="audio/mpeg"
+    >
+  </audio>
+
+  <audio
+    id="audio-porotos"
+    preload="auto"
+  >
+    <source
+      src="sonidos/porotos.mp3"
+      type="audio/mpeg"
+    >
+  </audio>
 
   <script src="app.js"></script>
 
