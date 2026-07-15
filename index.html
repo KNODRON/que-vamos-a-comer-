@@ -1,312 +1,789 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"
-  >
-
-  <meta name="theme-color" content="#007639">
-
-  <meta
-    name="description"
-    content="Ruleta familiar para elegir el almuerzo y la once de cada día."
-  >
-
-  <title>¿Qué comemos?</title>
-
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
-
-  <link rel="icon" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
-</head>
-
-<body>
-
-  <header class="encabezado">
-    <p class="subtitulo">MENÚ FAMILIAR</p>
-    <h1>¿Qué comemos?</h1>
-    <p>La ruleta decide por nosotros 😄</p>
-  </header>
-
-  <main class="contenedor">
-
-    <!-- SELECTORES -->
-    <section class="panel-controles">
-
-      <div class="selector-tipo" role="group" aria-label="Tipo de comida">
-
-        <button
-          id="btn-almuerzo"
-          class="tipo-btn activo"
-          data-tipo="almuerzo"
-          type="button"
-        >
-          🍲 Almuerzo
-        </button>
-
-        <button
-          id="btn-once"
-          class="tipo-btn"
-          data-tipo="once"
-          type="button"
-        >
-          🥪 Once
-        </button>
-
-      </div>
-
-      <div class="selector-dia">
-
-        <label for="dia">¿Para qué día?</label>
-
-        <select id="dia">
-          <option value="hoy">Hoy</option>
-          <option value="manana">Mañana</option>
-          <option value="lunes">Lunes</option>
-          <option value="martes">Martes</option>
-          <option value="miercoles">Miércoles</option>
-          <option value="jueves">Jueves</option>
-          <option value="viernes">Viernes</option>
-          <option value="sabado">Sábado</option>
-          <option value="domingo">Domingo</option>
-        </select>
-
-      </div>
-
-    </section>
-
-    <!-- RULETA -->
-    <section class="zona-ruleta">
-
-      <div class="instruccion-ruleta">
-        <span class="icono-dedo">☝️</span>
-
-        <div>
-          <strong>Arrastra la ruleta</strong>
-          <small>Muévela con el dedo y suéltala para hacerla girar</small>
-        </div>
-      </div>
-
-      <div class="contenedor-ruleta">
-
-        <div class="puntero" aria-hidden="true"></div>
-
-        <div
-          id="ruleta-interactiva"
-          class="ruleta-marco"
-          role="button"
-          tabindex="0"
-          aria-label="Arrastra la ruleta para elegir una comida"
-        >
-
-          <canvas
-            id="ruleta"
-            width="700"
-            height="700"
-            aria-label="Ruleta de comidas"
-          ></canvas>
-
-          <div class="centro-ruleta" aria-hidden="true">
-            <span id="centro-ruleta-icono">🍲</span>
-          </div>
-
-        </div>
-
-      </div>
-
-      <p id="mensaje-ayuda" class="mensaje-ayuda">
-        Arrastra la ruleta con fuerza y suéltala.
-      </p>
-
-      <button
-        id="btn-girar"
-        class="btn-girar btn-girar-respaldo"
-        type="button"
-      >
-        🎡 O toca aquí para girar
-      </button>
-
-    </section>
-
-    <!-- RESULTADO -->
-    <section
-      id="resultado"
-      class="resultado oculto"
-      aria-live="polite"
-    >
-
-      <p id="resultado-dia" class="resultado-dia"></p>
-
-      <div id="resultado-revelacion" class="resultado-revelacion">
-
-        <p class="texto-suspenso">HOY TOCA...</p>
-
-        <div id="contenedor-foto" class="contenedor-foto">
-
-          <img
-            id="resultado-foto"
-            class="resultado-foto"
-            src=""
-            alt=""
-            loading="lazy"
-          >
-
-          <div
-            id="foto-no-disponible"
-            class="foto-no-disponible oculto"
-          >
-            <span id="resultado-icono" class="resultado-icono">🍽️</span>
-          </div>
-
-        </div>
-
-        <h2 id="resultado-comida"></h2>
-
-      </div>
-
-      <div class="acciones-resultado">
-
-        <button
-          id="btn-aceptar"
-          class="btn-aceptar"
-          type="button"
-        >
-          ✅ Guardar menú
-        </button>
-
-        <button
-          id="btn-repetir"
-          class="btn-repetir"
-          type="button"
-        >
-          🔄 Girar otra vez
-        </button>
-
-      </div>
-
-    </section>
-
-    <!-- MENÚ SEMANAL -->
-    <section class="semana">
-
-      <div class="titulo-seccion">
-
-        <div>
-          <p class="etiqueta">PLANIFICACIÓN</p>
-          <h2>Menú semanal</h2>
-        </div>
-
-        <button
-          id="btn-limpiar-semana"
-          class="btn-secundario"
-          type="button"
-        >
-          Limpiar
-        </button>
-
-      </div>
-
-      <div id="lista-semana" class="lista-semana"></div>
-
-    </section>
-
-    <!-- ADMINISTRAR COMIDAS -->
-    <section class="administrar">
-
-      <details>
-
-        <summary>⚙️ Administrar comidas</summary>
-
-        <div class="administrar-contenido">
-
-          <label for="nuevo-tipo">Categoría</label>
-
-          <select id="nuevo-tipo">
-            <option value="almuerzo">Almuerzo</option>
-            <option value="once">Once</option>
-          </select>
-
-          <label for="nueva-comida">Nueva comida</label>
-
-          <div class="agregar-fila">
-
-            <input
-              id="nueva-comida"
-              type="text"
-              maxlength="60"
-              autocomplete="off"
-              placeholder="Ejemplo: Cazuela de vacuno"
-            >
-
-            <button
-              id="btn-agregar"
-              type="button"
-            >
-              Agregar
-            </button>
-
-          </div>
-
-          <div id="lista-comidas" class="lista-comidas"></div>
-
-          <button
-            id="btn-restaurar"
-            class="btn-restaurar"
-            type="button"
-          >
-            Restaurar comidas originales
-          </button>
-
-        </div>
-
-      </details>
-
-    </section>
-
-  </main>
-
-  <footer>
-    Hecho para terminar con el eterno “¿qué hacemos para comer?” 😂
-  </footer>
-
-  <!-- SONIDOS -->
-
-  <audio
-    id="audio-ruleta"
-    preload="auto"
-    loop
-  >
-    <source
-      src="sonidos/ruleta.mp3"
-      type="audio/mpeg"
-    >
-  </audio>
-
-  <audio
-    id="audio-resultado"
-    preload="auto"
-  >
-    <source
-      src="sonidos/resultado.mp3"
-      type="audio/mpeg"
-    >
-  </audio>
-
-  <audio
-    id="audio-porotos"
-    preload="auto"
-  >
-    <source
-      src="sonidos/porotos.mp3"
-      type="audio/mpeg"
-    >
-  </audio>
-
-  <script src="app.js"></script>
-
-</body>
-</html>
+:root {
+  --verde: #007639;
+  --verde-oscuro: #004f27;
+  --verde-claro: #e8f5ee;
+  --amarillo: #e4b600;
+  --blanco: #ffffff;
+  --gris-fondo: #f3f5f4;
+  --gris-texto: #5f6c65;
+  --texto: #17221c;
+  --borde: #dce4df;
+  --sombra: 0 14px 35px rgba(0, 65, 32, 0.12);
+  --radio: 22px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--texto);
+  background:
+    radial-gradient(circle at top, #dff4e8 0, transparent 320px),
+    var(--gris-fondo);
+}
+
+body.ruleta-activa {
+  overflow: hidden;
+  touch-action: none;
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.encabezado {
+  padding:
+    calc(34px + env(safe-area-inset-top))
+    20px
+    30px;
+  text-align: center;
+  color: var(--blanco);
+  background:
+    linear-gradient(
+      140deg,
+      rgba(0, 118, 57, 0.97),
+      rgba(0, 63, 31, 0.98)
+    );
+  border-radius: 0 0 34px 34px;
+  box-shadow: var(--sombra);
+}
+
+.encabezado h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(2rem, 8vw, 3.4rem);
+  line-height: 1;
+}
+
+.encabezado p {
+  margin: 0;
+}
+
+.encabezado .subtitulo {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  opacity: 0.85;
+}
+
+.contenedor {
+  width: min(100% - 28px, 760px);
+  margin: 24px auto 50px;
+}
+
+.panel-controles,
+.zona-ruleta,
+.resultado,
+.semana,
+.administrar {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: var(--blanco);
+  border: 1px solid rgba(220, 228, 223, 0.8);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+.selector-tipo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.tipo-btn {
+  min-height: 54px;
+  border: 2px solid var(--borde);
+  border-radius: 16px;
+  font-weight: 800;
+  color: var(--texto);
+  background: var(--blanco);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tipo-btn.activo {
+  color: var(--blanco);
+  border-color: var(--verde);
+  background: var(--verde);
+  transform: translateY(-1px);
+}
+
+.selector-dia {
+  margin-top: 18px;
+}
+
+.selector-dia label,
+.administrar label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--gris-texto);
+}
+
+select,
+input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 14px;
+  color: var(--texto);
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  outline: none;
+}
+
+select:focus,
+input:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 4px rgba(0, 118, 57, 0.1);
+}
+
+/* INSTRUCCIÓN DE ARRASTRE */
+
+.instruccion-ruleta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  text-align: left;
+  border: 1px solid rgba(0, 118, 57, 0.14);
+  border-radius: 16px;
+  background: var(--verde-claro);
+}
+
+.instruccion-ruleta .icono-dedo {
+  display: block;
+  font-size: 1.8rem;
+  animation: moverDedo 1.6s ease-in-out infinite;
+}
+
+.instruccion-ruleta strong,
+.instruccion-ruleta small {
+  display: block;
+}
+
+.instruccion-ruleta strong {
+  margin-bottom: 2px;
+  color: var(--verde-oscuro);
+}
+
+.instruccion-ruleta small {
+  font-size: 0.76rem;
+  line-height: 1.3;
+  color: var(--gris-texto);
+}
+
+@keyframes moverDedo {
+  0%,
+  100% {
+    transform: rotate(-10deg) translateX(-3px);
+  }
+
+  50% {
+    transform: rotate(12deg) translateX(5px);
+  }
+}
+
+/* RULETA INTERACTIVA */
+
+.zona-ruleta {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.contenedor-ruleta {
+  position: relative;
+  width: min(100%, 540px);
+  margin: 0 auto;
+  padding-top: 18px;
+}
+
+.ruleta-marco {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  cursor: grab;
+  border: 8px solid var(--verde-oscuro);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #ffffff 0%, #f7faf8 72%, #d9e5de 100%);
+  box-shadow:
+    0 16px 36px rgba(0, 63, 31, 0.24),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.9);
+}
+
+.ruleta-marco:active,
+.ruleta-marco.arrastrando {
+  cursor: grabbing;
+}
+
+.ruleta-marco.arrastrando {
+  box-shadow:
+    0 20px 42px rgba(0, 63, 31, 0.3),
+    0 0 0 6px rgba(0, 118, 57, 0.08),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.9);
+}
+
+#ruleta {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  border-radius: 50%;
+  will-change: transform;
+  transform-origin: center;
+}
+
+.centro-ruleta {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  border: 8px solid var(--verde-oscuro);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #ffffff, #e6efe9);
+  box-shadow:
+    0 8px 18px rgba(0, 63, 31, 0.22),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.7);
+}
+
+.centro-ruleta span {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.puntero {
+  position: absolute;
+  z-index: 8;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 23px solid transparent;
+  border-right: 23px solid transparent;
+  border-top: 48px solid #f1b500;
+  filter: drop-shadow(0 5px 4px rgba(0, 0, 0, 0.22));
+}
+
+.puntero::after {
+  content: "";
+  position: absolute;
+  top: -48px;
+  left: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffe16a;
+}
+
+.ruleta-marco.girando {
+  animation: pulsoRuleta 1s ease-in-out infinite;
+}
+
+@keyframes pulsoRuleta {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.008);
+  }
+}
+
+.mensaje-ayuda {
+  margin: 16px 0 0;
+  font-size: 0.85rem;
+  color: var(--gris-texto);
+}
+
+.btn-girar {
+  width: 100%;
+  min-height: 58px;
+  margin-top: 14px;
+  border: none;
+  border-radius: 17px;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: var(--blanco);
+  background:
+    linear-gradient(135deg, var(--verde), var(--verde-oscuro));
+  box-shadow: 0 10px 22px rgba(0, 118, 57, 0.24);
+}
+
+.btn-girar:active {
+  transform: scale(0.985);
+}
+
+.btn-girar-respaldo {
+  opacity: 0.92;
+}
+
+/* RESULTADO */
+
+.resultado {
+  overflow: hidden;
+  text-align: center;
+  border: 2px solid rgba(0, 118, 57, 0.18);
+  background:
+    linear-gradient(160deg, var(--blanco), var(--verde-claro));
+}
+
+.resultado.oculto,
+.oculto {
+  display: none !important;
+}
+
+.resultado-dia {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--verde);
+  text-transform: uppercase;
+}
+
+.resultado-revelacion {
+  margin-top: 10px;
+}
+
+.texto-suspenso {
+  margin: 10px 0 14px;
+  font-size: 0.88rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: var(--verde-oscuro);
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.resultado.mostrando .texto-suspenso {
+  animation: aparecerSuspenso 0.7s ease forwards;
+}
+
+@keyframes aparecerSuspenso {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contenedor-foto {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  margin: 0 auto 18px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 118, 57, 0.15);
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, #edf5f0, #dfece4);
+  box-shadow: 0 12px 26px rgba(0, 63, 31, 0.12);
+  opacity: 0;
+  transform: scale(0.94);
+}
+
+.resultado.mostrando .contenedor-foto {
+  animation: revelarFoto 0.8s ease 0.45s forwards;
+}
+
+@keyframes revelarFoto {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.resultado-foto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.foto-no-disponible {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at center, #ffffff, #e4efe8);
+}
+
+.resultado-icono {
+  font-size: 5rem;
+  filter: drop-shadow(0 8px 10px rgba(0, 63, 31, 0.12));
+}
+
+.resultado h2 {
+  margin: 4px 0 20px;
+  font-size: clamp(1.65rem, 7vw, 2.5rem);
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.resultado.mostrando h2 {
+  animation: revelarNombre 0.65s ease 0.9s forwards;
+}
+
+@keyframes revelarNombre {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.resultado.especial-porotos {
+  animation: temblorPorotos 0.55s ease;
+}
+
+@keyframes temblorPorotos {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-5px) rotate(-0.5deg);
+  }
+
+  40% {
+    transform: translateX(5px) rotate(0.5deg);
+  }
+
+  60% {
+    transform: translateX(-4px) rotate(-0.4deg);
+  }
+
+  80% {
+    transform: translateX(4px) rotate(0.4deg);
+  }
+}
+
+.acciones-resultado {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.btn-aceptar,
+.btn-repetir {
+  min-height: 52px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+.btn-aceptar {
+  color: var(--blanco);
+  border: none;
+  background: var(--verde);
+}
+
+.btn-repetir {
+  color: var(--verde-oscuro);
+  border: 1px solid var(--borde);
+  background: var(--blanco);
+}
+
+/* MENÚ SEMANAL */
+
+.titulo-seccion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.titulo-seccion h2 {
+  margin: 2px 0 0;
+}
+
+.etiqueta {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  color: var(--verde);
+}
+
+.btn-secundario {
+  padding: 9px 13px;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--gris-texto);
+  background: var(--blanco);
+}
+
+.lista-semana {
+  display: grid;
+  gap: 10px;
+}
+
+.tarjeta-dia {
+  padding: 14px;
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  background: #fbfcfb;
+}
+
+.tarjeta-dia.dia-actual {
+  border-color: var(--verde);
+  background: var(--verde-claro);
+}
+
+.tarjeta-dia h3 {
+  margin: 0 0 10px;
+  text-transform: capitalize;
+}
+
+.comida-fila {
+  display: grid;
+  grid-template-columns: 92px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  border-top: 1px dashed var(--borde);
+}
+
+.comida-fila:first-of-type {
+  border-top: none;
+}
+
+.comida-tipo {
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: var(--gris-texto);
+}
+
+.comida-nombre {
+  font-size: 0.9rem;
+}
+
+.comida-vacia {
+  color: #9aa59f;
+  font-style: italic;
+}
+
+.btn-borrar-item {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 9px;
+  color: #8b1d1d;
+  background: #ffeaea;
+}
+
+/* ADMINISTRAR */
+
+details summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 900;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+.administrar-contenido {
+  margin-top: 20px;
+}
+
+.administrar-contenido label:not(:first-child) {
+  margin-top: 14px;
+}
+
+.agregar-fila {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.agregar-fila button {
+  padding: 0 16px;
+  border: none;
+  border-radius: 14px;
+  font-weight: 800;
+  color: var(--blanco);
+  background: var(--verde);
+}
+
+.lista-comidas {
+  display: grid;
+  gap: 8px;
+  max-height: 330px;
+  margin-top: 18px;
+  overflow-y: auto;
+}
+
+.item-comida {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  background: #fbfcfb;
+}
+
+.item-comida span {
+  font-size: 0.9rem;
+}
+
+.item-comida button {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 9px;
+  color: #8b1d1d;
+  background: #ffe8e8;
+}
+
+.btn-restaurar {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 16px;
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  font-weight: 800;
+  color: var(--verde-oscuro);
+  background: var(--blanco);
+}
+
+footer {
+  padding:
+    0
+    18px
+    calc(30px + env(safe-area-inset-bottom));
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--gris-texto);
+}
+
+/* TELÉFONOS */
+
+@media (max-width: 520px) {
+  .contenedor {
+    width: min(100% - 18px, 760px);
+    margin-top: 14px;
+  }
+
+  .panel-controles,
+  .zona-ruleta,
+  .resultado,
+  .semana,
+  .administrar {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .contenedor-ruleta {
+    width: 100%;
+  }
+
+  .ruleta-marco {
+    padding: 7px;
+    border-width: 6px;
+  }
+
+  .centro-ruleta {
+    width: 76px;
+    height: 76px;
+    border-width: 6px;
+  }
+
+  .centro-ruleta span {
+    font-size: 1.8rem;
+  }
+
+  .puntero {
+    border-left-width: 19px;
+    border-right-width: 19px;
+    border-top-width: 41px;
+  }
+
+  .acciones-resultado {
+    grid-template-columns: 1fr;
+  }
+
+  .comida-fila {
+    grid-template-columns: 82px 1fr auto;
+  }
+
+  .resultado-icono {
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .selector-tipo {
+    grid-template-columns: 1fr;
+  }
+
+  .instruccion-ruleta {
+    align-items: flex-start;
+  }
+
+  .agregar-fila {
+    grid-template-columns: 1fr;
+  }
+
+  .agregar-fila button {
+    min-height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
