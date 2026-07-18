@@ -458,3 +458,17 @@ footer {
     grid-template-columns: 82px 1fr auto;
   }
 }
+
+/* Ocultar fotografías del resultado */
+
+.contenedor-foto {
+  display: none !important;
+}
+
+.resultado-revelacion {
+  margin-top: 16px;
+}
+
+.resultado h2 {
+  margin-top: 18px;
+}
